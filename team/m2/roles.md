@@ -1,11 +1,11 @@
 # Team Roles and Commit Contributions
 
 ## Shanzay Khan - Project Manager 
-**Role**: write down the role
+**Role**: Oversees overall project, help ensures milestones are met before the deadline and that all members are able to put in their respective efforts. Responsible for ensuring every part of the team is supported and knows what they need to do.
 - **Top 3 Commits**:
-  1. [Commit 1](https://github.com/repo/commit1): Created the initial GitHub repository and set up the project structure, including the `team/m2` folder for milestone submissions.
-  2. [Commit 2](https://github.com/repo/commit2): Organized and led the first team meeting, distributing tasks and ensuring deadlines were agreed upon.
-  3. [Commit 3](https://github.com/repo/commit3): Drafted the initial version of the `problem.md`
+  1. [Commit 1](https://github.com/TedDPig123/326_Project/pull/2/commits/8cac04581240690e87732482c65a882d989a7d60) Created first draft of `problem.md`, aided in finalizing roles and duties for everyone else
+  2. [Commit 2]
+  3. [Commit 3]
 
 ## Emily Shaw - documentation writer
  - **Role**: responsible for the final documentation check and the organization of documents
