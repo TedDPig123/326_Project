@@ -4,55 +4,82 @@
 
 ### 1. Character generation
 
- - **Description**: record the information/data they created for the character on the battle map
-     - "character_id"(string): a unique identifier for each character created
-     - "name" (string): The name for the character
-     - "health" (number): The amount of health the character has
-     - "attack" (number): The stat for attack 
-     - "defense" (number): The stat for defense
-     - "description" (string): A short description for the character they created  
-     - "character_color" (string): sets the color that it will appear on the map
-     - "character_size" (number): the size of the character(how much tile it occupies)
-     - "character_image"(image): the image for the character
-
- - **Data Source**: User-Data input via enemy/npc creation form
+ - **Description**: record the information/data the User created for the character on the battle map.
+     - `map_id`(string): the unique identifier for the map associated with the character.
+     - `character_id`(string): a unique identifier for each character created.
+     - `name` (string): The name for the character.
+     - `health` (number): The amount of health the character has.
+     - `character_description` (string): A short description for the character user created.
+     - `character_size` (number): the size of the character(how much tile it occupies).
+     - `character_image`(image): the image for the character.
+     - `character_cord`(object): record the placement of the character on the map.
+ - **Data Source**: User-Data input via Add Token.
 
 ### 2. Object generation
 
- - **Description**: Tracks the creation of object
-     - "object_id"(string): a unique identifier for each object created and placed
-     - "object_tag" (string): shows the object type(wall castle etc.) for the object
-     - "object_size" (number): the size of the object(how much tile it occupies)
-     - "object_image"(image): the image for the object
- - **Data Source**: User data input via object creation.
+ - **Description**: Tracks the creation of object.
+     - `map_id`(string): the unique identifier for the map associated with the object.
+     - `object_id`(string): a unique identifier for each object created and placed.
+     - `object_tag` (string): shows the object type(wall castle etc.) for the object.
+     - `object_size` (number): the size of the object(how much tile it occupies).
+     - `object_image`(image): the image for the object.
+     - `object_cord`(object): record the placement of the objects on the map.
+ - **Data Source**: User data input via Add Object.
 
 ### 3. Dice Roll
 
- - **Description**: tracks dice roll condition for the generation of dice
-     - "number_of_dice"(number): the amount of dice for each roll
-     - "dice_type"(string): a type(class) for each type of dice(d6, d10, d20 etc.)
-     - "condition"(number): the extra number added onto each dice roll at the end(like +2, +1)
- - **Data Source**: User data whenever they submit in the dice generation box
+ - **Description**: tracks dice roll made by the user.
+     - `map_id`(string): the unique identifier for the map associated with the dice roll generator.
+     - `number_of_dice`(number): the amount of dice for each roll.
+     - `dice_type`(string): the type for the dice(d6, d10, d20 etc.)
+     - `condition`(number): the extra number added onto each dice roll at the end(like +2, +1)
+     - `result`(number): the result of the dice roll.
+ - **Data Source**: User data whenever they submit in the dice generation box. And the result will be automatically calculated by the system.
 
 ### 4. Map generation
 
- - **Description**: records the information for map generation
-     - "map_id"(string): the unique identifier for each map created
-     - "map_area" (number): how big the map is
-     - "background" (image): the image applied to the entirety of the map
-     - "grid_size" (number): the size of each tile in the grid
-     - "terrain_tag" (string): shows the terrain for the tile(s)
-     - "tile_color"(string): sets the color of the tile(s)
-     - "tile_size"(number): the numbers of tile the user wants to group together with terrain tag
- - **Data Source**: User input and system generated, the application will have a default and the user can input their own image and grid size if they want.
+ - **Description**: records the information for map generation.
+     - `map_id`(string): the unique identifier for each map created.
+     - `grid_x` (number): how wide the grid is.
+     - `grid_y` (number): how long the grid is.
+     - `grid_size` (number): the size of the grid(`grid_x`*`grid_y`)
+     - `background` (image): the image applied to the entirety of the map.
+ - **Data Source**: User input via Edit Grid, and a default map is created by the system if no input is given.
 
-### 5. Map placement
-
- - **Description**: records and store the information for object placement on map
-     - "tile_cord"(object): record the placement of the tile on the map
-     - "object_cord"(object): record the placement of the objects on the map
-     - "character_cord"(object): record the placement of the character on the map
-     - "tile_state"(string): record if the tile is currently being used
- - **Data Source**: User input when they drag and drop objects via the main battle map, will probably use API
+### 5. Terrain generation
+ - **Description**: records the information of the terrain created.
+     - `map_id`(string): the unique identifier for the map associated with the terrain generated.
+     - `terrain_id`(string): a unique identifier for each terrain created.
+     - `terrain_color` (string): shows the color of the terrain.
+     - `terrain_description` (string): A short description for the terrain user created.
+     - `terrain_size`(number): the numbers of tile the user wants to group together with `terrain_color`.
+     - `terrain_cord`(object): record the placement of the terrain on the map.
+ - **Data Source**: User input via Add Terrain
 
 ### 6. Drawing
+ - **Description**: records the drawing on th battle map.
+     - `map_id`(string): the unique identifier for the map associated with the drawing.
+     - `draw_id`(string): a unique identifier for each drawing created.
+     - `size`(number): the size of the pen/eraser/shape.
+     - `color`(string): the color of the pen/shape.
+     - `mode`(string): is it freehand, shape or erasing mode.
+     - `drawing_cord`(object): record the placement of the drawing on the map.
+ - **Data Source**: User input when they select the drawing feature.
+
+# Data Relationships
+
+- **Map to Character**: One-to-many relationship (a Map can have many Character).
+- **Map to Object**: One-to-many relationship (a Map can have many Object).
+- **Map to Terrain**: One-to-many relationship (a map can have many Terrain).
+- **Map to Drawing**: One-to-many relationship (a map can have many Drawing).
+- **Map to Dice roll**: One-to-one relationship (a map can have one Dice roll bar).
+
+## Data Sources
+
+- **User-Input Data**: This is all of the data, including character, object, Terrain and map generation.
+And also dice roll input and drawing input.
+
+- **System-Generated Data**: 
+The result of the dice roll will be automatically calculated by the system according to the user input. 
+And there will be a default battle map with default grid size and a white background generated by the system. 
+The system will automatically store the state and information of things associated with each unique `map_id`.
