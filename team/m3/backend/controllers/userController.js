@@ -9,7 +9,7 @@ const factoryResponse = (status, message) => ({ status, message });
 export const registerUser = async (req, res) => {
     const { username, email, password } = req.body;
     try {
-        const user = await SQLiteUser.create({ username, email, password });
+        const user = await SQLiteUser.create({ username, email, password }); //now creates the user and corresponding MegaDatabase
         res.status(201).json(user);
     } catch (error) {
         res.status(500).json(factoryResponse(500, 'User not created due to error; userController'));
@@ -51,7 +51,7 @@ export const deleteUser = async (req, res) => {
         if (!user) {
             return res.status(404).json(factoryResponse(404, 'User not found'));
         }
-        await SQLiteUser.delete(user);
+        await SQLiteUser.delete(user); //now deletes the user and their MegaDatabase
         res.status(200).json(factoryResponse(200, 'User deleted successfully'));
     } catch (error) {
         res.status(500).json(factoryResponse(500, 'Error deleting user'));

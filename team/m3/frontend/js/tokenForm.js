@@ -1,3 +1,4 @@
+import { updateMegaDB } from "./megaDBRequests.js";
 export class tokenForm{
     //adds all needed element from main.html as private attribute
     #createButton;#cancelButton;#updateButton;#deleteButton;#ObjForm;
@@ -151,6 +152,10 @@ export class tokenForm{
             const id = this.#makeToken(data);
             this.clearForm();
             this.#ObjForm.style.display= "none";
+
+            //megadb 
+            await updateMegaDB();
+
             //returns the token id
             return data.tokenid;
         }
@@ -174,6 +179,10 @@ export class tokenForm{
         if (!response.ok) {
             throw new Error("Failed to delete token");
         }
+
+        //megadb
+        await updateMegaDB();
+
         //returns the token id
         return id;
     }
@@ -212,6 +221,10 @@ export class tokenForm{
             }
             this.clearForm();
             this.#ObjForm.style.display= "none";
+
+            //updatemegadb
+            await updateMegaDB();
+
             //returns the token id
             return id;
         }

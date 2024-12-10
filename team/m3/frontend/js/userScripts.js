@@ -1,3 +1,11 @@
+import { syncWithMegaDatabase } from "./megaDBRequests.js";
+import { createOrUpdateMegaDatabase, getAllDatabaseDataForRegistration} from "./megaDBRequests.js";
+import { clearTileObjectDB, tileRenderOnLoad } from "./TileLogic.js";
+import { updateMegaDB } from "./megaDBRequests.js";
+
+localStorage.removeItem('userEmail');
+
+
 // Event listener for the registration form submission
 document.getElementById('register-form').addEventListener('submit', async (e) => {
     e.preventDefault(); // Prevent the default form submission behavior
@@ -17,6 +25,12 @@ document.getElementById('register-form').addEventListener('submit', async (e) =>
 
         // Parse the response from the server
         const data = await response.json();
+
+        //note: this part does not run
+        const megaDBObject = await getAllDatabaseDataForRegistration(email);
+        console.log(megaDBObject);
+        await createOrUpdateMegaDatabase(megaDBObject);
+
 
         // Display a message to the user
         document.getElementById('message').innerText = data.message || 'Registration successful';
@@ -48,6 +62,14 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
         // If a token is returned, store it in localStorage and display a success message
         if (data.token) {
             localStorage.setItem('token', data.token);
+
+            //geri edit start
+            localStorage.setItem('userEmail', email);
+
+            await syncWithMegaDatabase(email);
+            await tileRenderOnLoad();
+            //geri edit end
+
             document.getElementById('message').innerText = 'Login successful';
         } else {
             // Display an error message if the login fails
@@ -72,7 +94,10 @@ document.getElementById('logout-button').addEventListener('click', async () => {
         const data = await response.json();
 
         // Remove the token from localStorage and display a success message
+        await updateMegaDB();
+        await clearTileObjectDB()
         localStorage.removeItem('token');
+        localStorage.removeItem('userEmail');
         document.getElementById('message').innerText = data.message || 'Logged out successfully';
     } catch (error) {
         // Display an error message if the logout fails

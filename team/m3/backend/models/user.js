@@ -1,5 +1,6 @@
 import { Sequelize, DataTypes } from 'sequelize';
 import bcrypt from 'bcrypt';
+import megaDatabase from './sqliteMegadatabase.js';
 
 // Initialize Sequelize with SQLite database
 const sequelize = new Sequelize({
@@ -62,7 +63,20 @@ class _SQLiteUser {
     // Create a new user
     async create(user) {
         try {
-            return await User.create(user);
+            const newUser = await User.create(user);
+            // Create new megaDatabase entry when a user is created
+            await megaDatabase.create({
+                userId: newUser.id,
+                gridData: {},
+                gridStateData: {},
+                tileData: {},
+                tokenData: {},
+                userData: {
+                    username: newUser.username,
+                    email: newUser.email,
+                },
+            });
+            return newUser;
         } catch (error) {
             console.error('user.js; Error creating user:', error);
             throw error;
@@ -115,6 +129,9 @@ class _SQLiteUser {
     // Delete a user
     async delete(user) {
         try {
+            // Delete the MegaDatabase entry for the user
+            await megaDatabase.destroy({ where: { userId: user.id } });
+            
             await User.destroy({ where: { id: user.id } });
             return user;
         } catch (error) {

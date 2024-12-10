@@ -10,10 +10,11 @@ import {createTile,
     deleteAllGridStates,
     getAllGridStates
 } from "./TileClientRequests.js";
+import { updateMegaDB } from "./megaDBRequests.js";
 
 //initialize indexedDB database for tile objects
 const dbTileObject = new DatabaseConnection('tileDatabase');
-const dbGridState = new DatabaseConnection('gridStateDatabase');
+export const dbGridState = new DatabaseConnection('gridStateDatabase');
 
 //initialize indexedDB database for grid state
 class gridObject{
@@ -34,9 +35,20 @@ export class tileObject{
         this.imgData = imgData;
     }
 }
+
+// document.getElementById('logout-button').addEventListener('click', async () => {
+//     try {
+//         await updateMegaDB();
+//         await clearTileObjectDB();
+//     } catch (error) {
+//         console.log(error);
+//     }
+// });
 //ON-LOAD: Populate the tile types, update indexedDB
 
-async function tileRenderOnLoad() {
+export async function tileRenderOnLoad() {
+    await updateMegaDB();
+
     const allTiles = await getAllTiles();
     if (!allTiles) {
         console.error("Failed to retrieve tiles from server");
@@ -97,7 +109,7 @@ tileRenderOnLoad();
 rerenderGrid();
 
 //saving the grid state
-async function saveGridState() {
+export async function saveGridState() {
     const gridState = [];
 
     const tiles = document.querySelectorAll('.grid-tile');
@@ -234,6 +246,8 @@ async function addNewCustomTile(){
         }
         //backend syncing
         await createTile(serverTile);
+        await updateMegaDB();
+
     } catch (error) {
         console.error("tile not added", error);
     }
@@ -313,7 +327,6 @@ async function deleteEditedTile(){
 
         //backend syncing
         await deleteTile(tileID);
-
     } catch (error) {
         console.error("tile not deleted", error);
     }
@@ -499,7 +512,6 @@ async function handleSquareClick(square) {
 
         //saves the state of the grid
         saveGridState();
-
         square.addEventListener('mouseenter', showTileDetails);
     } catch (error) {
         console.error("Error loading tile:", error);
@@ -531,13 +543,13 @@ function onMouseMove(event) {
             square.setAttribute('data-tile-name', selectedTile.type);
             square.setAttribute('data-tile-details', selectedTile.details);
         }
-        saveGridState();
         square.addEventListener('mouseenter', showTileDetails);
     }
 }
 
 function onMouseUp() {
     isMouseDown = false;
+    saveGridState();
 }
 
 function showTileDetails(event) {
@@ -576,11 +588,13 @@ export async function initializeBattleGrid(battleGrid) {
         square.addEventListener('mouseup', onMouseUp);
         square.addEventListener('mouseenter', showTileDetails);
     });
+
+    saveGridState();
 }
 
 //TODO: add backend
 //should make this an option
-async function clearTileObjectDB() {
+export async function clearTileObjectDB() {
     try {
         await dbGridState.clearDatabase();
         const message = await dbTileObject.clearDatabase();

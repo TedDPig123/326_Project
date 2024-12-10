@@ -8,6 +8,7 @@ import gridStateRouter from './routers/gridStateRouter.js';
 import userRouter from './routers/userRouter.js';
 import SQLiteUser from './models/user.js';
 import GridRouter from './routers/GridRouter.js';
+import megaDatabaseRouter from './routers/megaDBRouter.js';
 import BackgroundImageRoutes from './routers/backgroundImageRouter.js';
 import canvasRouter from './routers/CanvasRouter.js';
 
@@ -34,6 +35,7 @@ class Server {
         this.app.use("/tokens", TokenRoutes)
         this.app.use("/users", userRouter)
         this.app.use("/grid", GridRouter)
+        this.app.use("/megaDB", megaDatabaseRouter);
         this.app.use("/backgroundImage", BackgroundImageRoutes)
         this.app.use("/canvas", canvasRouter)
     }

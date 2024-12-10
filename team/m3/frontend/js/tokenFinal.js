@@ -1,6 +1,7 @@
 import {tokenForm} from "./tokenForm.js";
 import {imageForToken} from "./imageForToken.js";
 import { moveToken } from "./moveToken.js";
+import { updateMegaDB } from "./megaDBRequests.js";
 
 
 const battleGrid = document.getElementById('battle-grid');
