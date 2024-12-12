@@ -3,6 +3,7 @@ import {
   createGrid,
   getAllGrids,
   deleteGrid,
+  updateGrid,
 } from "../controllers/GridController.js"
 
 class GridRoutes {
@@ -53,6 +54,28 @@ class GridRoutes {
         await createGrid(req, res);
       });
   
+      // DESCRIPTION
+      //   Update grid. This endpoint updates the 
+      // REQUEST
+      //   POST /update/:grid
+      //   {
+      //     "gridWidth": "width of grid"
+      //     "gridHeight": "height of grid"
+      //   }
+      // RESPONSE
+      //   {
+      //     "id": generated id,
+      //     "gridWidth": "width of grid"
+      //     "gridHeight": "height of grid"
+      //   }
+      // STATUS CODES
+      //   200 - OK: The grid was created successfully
+      //   400 - Bad Request: The request was invalid or missing required data
+      //   500 - Internal Server Error: The server encountered an error
+      this.router.post("/update/:grid", async (req, res) => {
+        await updateGrid(req, res);
+      });
+
       // DESCRIPTION
       //   Clear grid. This endpoint deletes grids and returns an empty
       //   response. This operation cannot be undone.
